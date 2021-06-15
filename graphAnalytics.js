@@ -34,7 +34,8 @@ window.dataLayer = window.dataLayer || [];
 function pushPhoneTag(eventName, p, trigger) {
     let eventTrigger = trigger ? trigger : "user",
         phoneBrand = p.dispBrand ? p.dispBrand : "Target",
-        phoneModel = p.dispName,
+        phoneModel = p.phone,
+        phoneVariant = p.dispName,
         value = 1;
     
     window.dataLayer.push({
@@ -43,30 +44,33 @@ function pushPhoneTag(eventName, p, trigger) {
         "site": analyticsSite,
         "phoneBrand": phoneBrand,
         "phoneModel": phoneModel,
+        "phoneVariant": phoneVariant,
         "phoneName" : phoneBrand + ' ' + phoneModel,
         "value": value
     });
     
-    if (logAnalytics) { console.log("Event:      "+ eventName +"\nTrigger:    "+ eventTrigger +"\nSite:       "+ analyticsSite +"\nPhone:      "+ phoneBrand +" "+ phoneModel); }
+    if (logAnalytics) { console.log("Event:      "+ eventName +"\nTrigger:    "+ eventTrigger +"\nSite:       "+ analyticsSite +"\nPhone:      "+ phoneBrand +" "+ phoneModel +"\nVariant:    " + phoneVariant); }
 }
 
 // For events not related to a specific phone, e.g. user clicked screenshot button
-function pushEventTag(eventName, targetWindow, trigger) {
+function pushEventTag(eventName, targetWindow, other, trigger) {
     let eventTrigger = trigger ? trigger : "user",
         url = targetWindow.location.href,
         par = "?share=",
         value = 1,
-        activePhones = url.includes(par) ? decodeURI(url.replace(/_/g," ").split(par).pop().replace(/,/g, ", ")) : "null";
+        activePhones = url.includes(par) ? decodeURI(url.replace(/_/g," ").split(par).pop().replace(/,/g, ", ")) : "null",
+        otherData = other ? other : "null";
     
     window.dataLayer.push({
         "event" : eventName,
         "trigger" : eventTrigger,
         "site": analyticsSite,
         "activePhones": activePhones,
+        "other": otherData,
         "value": value
     });
     
-    if (logAnalytics) { console.log("Event:      "+ eventName +"\nTrigger:    "+ eventTrigger +"\nSite name:  "+ analyticsSite +"\nActive:     "+activePhones); }
+    if (logAnalytics) { console.log("Event:      "+ eventName +"\nTrigger:    "+ eventTrigger +"\nSite name:  "+ analyticsSite +"\nActive:     "+ activePhones +"\nOther:      "+ otherData); }
 }
 
 if (logAnalytics) { console.log("... Analytics initialized ... "); }
